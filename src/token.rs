@@ -23,6 +23,15 @@ pub struct CsrfToken {
     pub(crate) config: CsrfConfig,
 }
 
+impl std::fmt::Debug for CsrfToken {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("CsrfToken")
+            .field("token", &"<token hidden>")
+            .field("config", &"<config hidden>")
+            .finish()
+    }
+}
+
 /// this auto pulls a Cookies nd Generates the CsrfToken from the extensions
 #[cfg(not(feature = "layer"))]
 #[async_trait]
@@ -120,7 +129,7 @@ impl CsrfToken {
         mac.verify_slice(
             &Base64::decode_vec(form_authenticity_token).map_err(|_| CsrfError::PasswordHash)?,
         )
-        .map_err(|_| CsrfError::Verify)?;
+            .map_err(|_| CsrfError::Verify)?;
         Ok(())
     }
 }
